@@ -12,9 +12,10 @@ connectDB();
 const app = express();
 
 app.use(cors({
-    origin: ['http://localhost:5173', 'https://foodie-nine-virid.vercel.app/'],
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true
+    origin: ['http://localhost:5173', 'https://foodie-nine-virid.vercel.app'],
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
 }));
 
 
