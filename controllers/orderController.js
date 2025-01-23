@@ -33,7 +33,8 @@ exports.createOrder = async (req, res) => {
 // Get all orders for the user
 exports.getOrders = async (req, res) => {
   try {
-    const orders = await Order.find({ userId: req.user._id }).sort({ createdAt: -1 });
+    const orders = await Order.find().sort({ createdAt: -1 });
+
     res.json(orders);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching orders', error: error.message });
@@ -53,7 +54,6 @@ exports.getOrderDetails = async (req, res) => {
   }
 };
 
-// Update the status of an order (admin only)
 exports.updateOrderStatus = async (req, res) => {
   const { status } = req.body;
 
@@ -63,12 +63,13 @@ exports.updateOrderStatus = async (req, res) => {
       return res.status(404).json({ message: 'Order not found' });
     }
 
-    // Update the order status
+    // Update only the status field
     order.status = status;
-    await order.save();
-
+    await order.save({ validateModifiedOnly: true });  // Only validate modified fields
+    
     res.json(order);
   } catch (error) {
+    console.error('Error updating order status:', error);  // Log the error for debugging
     res.status(500).json({ message: 'Error updating order status', error: error.message });
   }
 };

@@ -1,4 +1,5 @@
-require('dotenv').config(); 
+require('dotenv').config();
+const cors = require('cors');
 const express = require('express');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
@@ -10,12 +11,21 @@ const { errorHandler } = require('./middlewares/errorMiddleware');
 connectDB();
 const app = express();
 
+app.use(cors({
+    origin: ['http://localhost:5173', 'https://your-production-site.com'],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true
+}));
+
+
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/menu', menuRoutes);
-app.use('/api/users', userRoutes);  // Add the user routes
+app.use('/api/users', userRoutes);
+
+app.use(errorHandler);
 
 app.use(errorHandler);
 

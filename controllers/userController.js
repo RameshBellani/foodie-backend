@@ -51,3 +51,18 @@ exports.updateProfile = async (req, res) => {
 
 
 
+// Fetch the user's profile (GET)
+exports.getProfile = async (req, res) => {
+  const userId = req.user._id;  // Get user ID from authenticated user
+
+  try {
+    const user = await User.findById(userId).select('-password');  // Avoid sending password back
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({ user });
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching profile', error: error.message });
+  }
+};
