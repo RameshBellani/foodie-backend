@@ -111,7 +111,9 @@ exports.getOrders = async (req, res) => {
   try {
     let orders;
     
-    if (req.user.isAdmin) {
+    // if (req.user.isAdmin) {
+      if (req.user.role === 'admin') {
+
       // Admins can view all orders
       orders = await Order.find().sort({ createdAt: -1 });
     } else {
