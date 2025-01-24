@@ -130,14 +130,14 @@ exports.getOrders = async (req, res) => {
 // Get details of a specific order
 exports.getOrderDetails = async (req, res) => {
   try {
-    const order = await Order.findById(req.params.orderId).populate('items.menuItem');
+    const order = await Order.findById(req.params.orderId).populate('items.menuItem').populate('address');
 
     if (!order) {
       return res.status(404).json({ message: 'Order not found' });
     }
 
     // Ensure only the order owner or admin can access order details
-    if (order.userId.toString() !== req.user._id.toString() && !req.user.isAdmin) {
+    if (order.userId.toString() !== req.user._id.toString() && !req.user.role === 'admin') {
       return res.status(403).json({ message: 'Not authorized to view this order' });
     }
 
